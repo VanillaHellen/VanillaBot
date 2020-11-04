@@ -22,6 +22,7 @@ db_data['password']=os.environ['DB_PASSWORD']
 db_data['host']=os.environ['DB_HOST']
 db_data['database']=os.environ['DB_DB']
 
+
 def getUwuNumber(userId: str):
     number = 0
     try:
