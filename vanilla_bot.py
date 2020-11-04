@@ -5,22 +5,23 @@ import random
 import json
 import mysql.connector
 import datetime
+import os
 
 script_location = Path(__file__).absolute().parent
 
-file_location = script_location / 'token.txt'
-file = file_location.open()
-token = file.read()
+# file_location = script_location / 'token.txt'
+# file = file_location.open()
+# token = file.read()
 
-file_location = script_location / 'db.txt'
-file = file_location.open()
-db_data = json.load(file)
+# file_location = script_location / 'db.txt'
+# file = file_location.open()
+# db_data = json.load(file)
 
 
 def getUwuNumber(userId: str):
     number = 0
     try:
-        dbcon = mysql.connector.connect(**db_data)
+        dbcon = mysql.connector.connect(**os.environ["DB_DATA"])
         cursor = dbcon.cursor(buffered=True, dictionary=True)
         cursor.execute(f"SELECT number FROM uwu_stats WHERE user_id = {userId}")
         result = cursor.fetchone()
@@ -172,4 +173,4 @@ async def on_command_error(ctx, error):
     await ctx.send(response)
 
 
-bot.run(token)
+bot.run(os.environ["ACCESS_TOKEN"])
