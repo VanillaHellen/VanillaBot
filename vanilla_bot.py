@@ -17,10 +17,10 @@ script_location = Path(__file__).absolute().parent
 # file = file_location.open()
 # db_data = json.load(file)
 db_data = {}
-db_data['DB_USER']=os.environ['DB_USER']
-db_data['DB_PASSWORD']=os.environ['DB_PASSWORD']
-db_data['DB_HOST']=os.environ['DB_HOST']
-db_data['DB_DB']=os.environ['DB_DB']
+db_data['user']=os.environ['DB_USER']
+db_data['password']=os.environ['DB_PASSWORD']
+db_data['host']=os.environ['DB_HOST']
+db_data['database']=os.environ['DB_DB']
 
 def getUwuNumber(userId: str):
     number = 0
