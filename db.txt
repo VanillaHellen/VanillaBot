@@ -1,0 +1,1 @@
+{"user": "user", "database": "database", "host": "host", "password": "password"}
