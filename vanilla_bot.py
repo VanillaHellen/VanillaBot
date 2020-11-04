@@ -16,12 +16,16 @@ script_location = Path(__file__).absolute().parent
 # file_location = script_location / 'db.txt'
 # file = file_location.open()
 # db_data = json.load(file)
-
+db_data = {}
+db_data['DB_USER']=os.environ['DB_USER']
+db_data['DB_PASSWORD']=os.environ['DB_PASSWORD']
+db_data['DB_HOST']=os.environ['DB_HOST']
+db_data['DB_DB']=os.environ['DB_DB']
 
 def getUwuNumber(userId: str):
     number = 0
     try:
-        dbcon = mysql.connector.connect(**os.environ["DB_DATA"])
+        dbcon = mysql.connector.connect(**db_data)
         cursor = dbcon.cursor(buffered=True, dictionary=True)
         cursor.execute(f"SELECT number FROM uwu_stats WHERE user_id = {userId}")
         result = cursor.fetchone()
