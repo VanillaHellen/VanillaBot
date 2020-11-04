@@ -40,7 +40,7 @@ def getUwuNumber(userId: str):
     return number
 
 
-def dbInsertUserOneTime(userId: str):
+def dbInsertUserUwu(userId: str, numberToAdd: int):
     try:
         number = getUwuNumber(userId)
         dbcon = mysql.connector.connect(**db_data)
@@ -48,7 +48,7 @@ def dbInsertUserOneTime(userId: str):
         add_uwu = (f"""INSERT INTO uwu_stats
                 (user_id, number)
             VALUES
-                ({userId}, {number + 1})
+                ({userId}, {number + numberToAdd})
             ON DUPLICATE KEY UPDATE
                 number = VALUES(number);
                 """)
@@ -152,10 +152,11 @@ async def on_message(message):
     if message.author == bot.user:
         return
     if 'uwu' in message.content.lower() and not message.content.startswith(f'{bot.command_prefix}uwu'):
+        number = message.content.count('uwu')
         emoji = bot.get_emoji(372490965723643907)
         if not emoji:
             emoji = bot.get_emoji(505712821913255941)
-        dbInsertUserOneTime(message.author.id)
+        dbInsertUserUwu(message.author.id, number)
         await message.add_reaction(emoji)
     await bot.process_commands(message)
 
