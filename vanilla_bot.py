@@ -76,6 +76,15 @@ async def on_ready():
 
 
 @bot.command(
+    description='Randomly picks an option from given ones.',
+    usage=f'{bot.command_prefix}choose <option1, option2, ...>',
+    help=f'{bot.command_prefix}choose 1 something "multiple words"'
+    )
+async def choose(ctx, *choices: str):
+    await ctx.send(random.choice(choices))
+
+
+@bot.command(
     description='Returns all commands available',
     usage=f'{bot.command_prefix}help',
     help=f'{bot.command_prefix}help'
@@ -100,13 +109,23 @@ async def help(ctx):
 
 
 @bot.command(
-    description='Randomly picks an option from given ones.',
-    usage=f'{bot.command_prefix}choose [option1, option2, ...]',
-    help=f'{bot.command_prefix}choose 1 something "multiple words"'
-    )
-async def choose(ctx, *choices: str):
-    await ctx.send(random.choice(choices))
+    description='The bot sends a prayer circle of emojis. Adding -h flag causes the bot to remove the command message',
+    usage=f'{bot.command_prefix}pc [-h]',
+    help=f'{bot.command_prefix}pc'
+)
+async def pc(ctx, flag: str = ''):
+    b = '<:blank:773987871085953026>'
+    c = ':candle:'
+    p = ':pray:'
+    first_line = b * 4 + c
+    second_line = b * 2 + c + b * 3 + c
+    third_line = b + c + b * 5 + c
+    fourth_line = c + b * 3 + p + b * 3 + c
 
+    message = '\n'.join([first_line, second_line, third_line, '', fourth_line, '', third_line, second_line, first_line])
+    if flag == '-h':
+        await ctx.message.delete()
+    await ctx.send(message)
 
 @bot.command(
     description='Rolls a Y dice X times.',
@@ -125,8 +144,8 @@ async def roll(ctx, dice: str):
 
 
 @bot.command(
-    description='Check the uwu stats',
-    usage=f'{bot.command_prefix}uwu [optional: @tag]',
+    description='Check your uwu stats. Adding a @tag after the command causes the bot to check the tagged user\'s stats',
+    usage=f'{bot.command_prefix}uwu [@tag]',
     help=f'{bot.command_prefix}uwu @someone'
     )
 async def uwu(ctx, user: discord.User = None):
@@ -140,11 +159,6 @@ async def uwu(ctx, user: discord.User = None):
         number = getUwuNumber(ctx.message.author.id)
         await ctx.send('{}, you have used uwu **{}** times!'.format(ctx.message.author.mention, number))
 
-
-@choose.error
-async def choose_error(ctx, error):
-    if isinstance(error, discord.ext.commands.CommandInvokeError):
-        await ctx.send('You must provide *something* to choose from!')
 
 
 @bot.event
@@ -161,6 +175,12 @@ async def on_message(message):
     await bot.process_commands(message)
 
 
+@choose.error
+async def choose_error(ctx, error):
+    if isinstance(error, discord.ext.commands.CommandInvokeError):
+        await ctx.send('You must provide *something* to choose from!')
+
+
 @bot.event
 async def on_command_error(ctx, error):
     response = ''
@@ -172,8 +192,8 @@ async def on_command_error(ctx, error):
     with open(script_location/'log.txt', 'a+') as log:
         log.write(datetime.datetime.now().strftime("%d.%m.%Y %H:%M:%S")
         + '\nSENT BY: ' + ctx.message.author.name + '#' + ctx.message.author.discriminator
-        + '\nMESSAGE: ' + ctx.message.content
         + ' (' + ctx.message.author.display_name + ')'
+        + '\nMESSAGE: ' + ctx.message.content
         + '\nERROR: ' + str(error)
         + '\n----------------------------------------------\n') 
     await ctx.send(response)
