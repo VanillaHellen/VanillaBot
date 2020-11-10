@@ -9,13 +9,6 @@ import os
 
 script_location = Path(__file__).absolute().parent
 
-# file_location = script_location / 'token.txt'
-# file = file_location.open()
-# token = file.read()
-
-# file_location = script_location / 'db.txt'
-# file = file_location.open()
-# db_data = json.load(file)
 db_data = {}
 db_data['user']=os.environ['DB_USER']
 db_data['password']=os.environ['DB_PASSWORD']
@@ -69,10 +62,7 @@ bot = commands.Bot(command_prefix='?', help_command=None, description=descriptio
 
 @bot.event
 async def on_ready():
-    print('Logged in as')
-    print(bot.user.name)
-    print(bot.user.id)
-    print('------')
+    await bot.change_presence(activity=discord.Game(name='Doki Doki UwU Club'))
 
 
 @bot.command(
