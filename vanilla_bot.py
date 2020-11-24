@@ -6,6 +6,9 @@ import json
 import mysql.connector
 import datetime
 import os
+import requests
+import io
+import aiohttp
 
 script_location = Path(__file__).absolute().parent
 
@@ -63,6 +66,23 @@ bot = commands.Bot(command_prefix='?', help_command=None, description=descriptio
 @bot.event
 async def on_ready():
     await bot.change_presence(activity=discord.Game(name='Doki Doki UwU Club'))
+
+
+@bot.command(
+    description='Sends a random dog pic.',
+    usage=f'{bot.command_prefix}dog',
+    help=f'{bot.command_prefix}dog'
+    )
+async def dog(ctx):
+    response = requests.get("https://dog.ceo/api/breeds/image/random")
+    if response.status_code != 200:
+        return await ctx.send("Something went wrong with the request. Do give it another try, perhaps!")
+    async with aiohttp.ClientSession() as session:
+        async with session.get(response.json()['message']) as resp:
+            if resp.status != 200:
+                return await ctx.send("Could not download the image! Try again?")
+            data = io.BytesIO(await resp.read())
+            await ctx.send(file=discord.File(data, 'doggo.jpg'))
 
 
 @bot.command(
