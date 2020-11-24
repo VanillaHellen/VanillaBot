@@ -69,6 +69,35 @@ async def on_ready():
 
 
 @bot.command(
+    description='Get info on number. You can specify the type (trivia, math, date, year) and the number - the order is not important - or leave them blank. Default type is Trivia, and not defining a number will cause it to be generated randomly.',
+    usage=f'{bot.command_prefix}number [number/type] [number/type]',
+    help=f'{bot.command_prefix}number math 489, {bot.command_prefix}number 489 math, {bot.command_prefix}number year, {bot.command_prefix}number 1232, {bot.command_prefix}number'
+    )
+async def number(ctx, arg1 = None, arg2 = None):
+    type = 'trivia'
+    number = None
+    if arg1:
+        if arg1.isnumeric():
+            number = arg1
+        else:
+            type = arg1
+    if arg2:
+        if number:
+            type = arg2
+        else:
+            number = arg2
+    
+    if number:
+        url = "http://numbersapi.com/" + str(number) + "/" + type
+    else:
+        url = "http://numbersapi.com/random/" + type
+    response = requests.get(url)
+    if response.status_code != 200:
+        return await ctx.send("Something went wrong with the request. Do give it another try, perhaps!")
+    await ctx.send(response.text)
+
+
+@bot.command(
     description='Sends a random dog pic.',
     usage=f'{bot.command_prefix}dog',
     help=f'{bot.command_prefix}dog'
