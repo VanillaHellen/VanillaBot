@@ -69,15 +69,15 @@ async def on_ready():
 
 
 @bot.command(
-    description='Get info on number. You can specify the type (trivia, math, date, year) and the number - the order is not important - or leave them blank. Default type is Trivia, and not defining a number will cause it to be generated randomly.',
-    usage=f'{bot.command_prefix}number [number/type] [number/type]',
-    help=f'{bot.command_prefix}number math 489, {bot.command_prefix}number 489 math, {bot.command_prefix}number year, {bot.command_prefix}number 1232, {bot.command_prefix}number'
+    description='Get info on number. You can specify the type (trivia, math, date, year) and the number - the order is not important - or leave them blank. For date type, the number should be in month/day format. Default type is Trivia, and not defining a number will cause it to be generated randomly.',
+    usage=f'{bot.command_prefix}n [number/type] [number/type]',
+    help=f'{bot.command_prefix}n math 489, {bot.command_prefix}n 489 math, {bot.command_prefix}n year, {bot.command_prefix}n 1232, {bot.command_prefix}n'
     )
-async def number(ctx, arg1 = None, arg2 = None):
+async def n(ctx, arg1 = None, arg2 = None):
     type = 'trivia'
     number = None
     if arg1:
-        if arg1.isnumeric():
+        if arg1.isnumeric() or "/" in arg1:
             number = arg1
         else:
             type = arg1
@@ -86,7 +86,9 @@ async def number(ctx, arg1 = None, arg2 = None):
             type = arg2
         else:
             number = arg2
-    
+    if number and "/" in number:
+        type = 'date'
+
     if number:
         url = "http://numbersapi.com/" + str(number) + "/" + type
     else:
