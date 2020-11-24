@@ -67,7 +67,7 @@ async def on_ready():
 
 @bot.command(
     description='Randomly picks an option from given ones.',
-    usage=f'{bot.command_prefix}choose <option1, option2, ...>',
+    usage=f'{bot.command_prefix}choose <option1 option2 ...>',
     help=f'{bot.command_prefix}choose 1 something "multiple words"'
     )
 async def choose(ctx, *choices: str):
@@ -153,6 +153,9 @@ async def uwu(ctx, user: discord.User = None):
 
 @bot.event
 async def on_message(message):
+    allowed_prefixes = ['??', '?!', '?x', '?/']
+    if message.content.lower().startswith(tuple(allowed_prefixes)):
+        return
     if message.author == bot.user:
         return
     if 'uwu' in message.content.lower() and not message.content.startswith(f'{bot.command_prefix}uwu'):
